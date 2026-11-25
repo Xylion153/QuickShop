@@ -1,10 +1,10 @@
 # Open decisions (owner)
 
-Known so far (2026-11-25): shop name **Quick Shop**; ships from **Florida**; currently sells on eBay.
+Known so far (2026-11-25): shop name **Quick Shop**; ships from **Florida**; currently sells on eBay at https://www.ebay.com/str/cristobalshop (set as `site.ebayStoreUrl`).
 
 ## Needed before the site goes public
 1. **Real listings and photos** to replace the six sample items in `src/data/catalog.ts`.
-2. **eBay store link** (`site.ebayStoreUrl`) and each item's eBay listing link (`ebayUrl`) if it's listed there too.
+2. **Each item's eBay listing link** (`ebayUrl`) if it's listed there too.
 3. **How buyers reach him**: email and/or phone for texts (`supportEmail`, `supportPhone`).
 4. **Shipping**: where he ships to, processing time, and the shipping policy wording.
 5. **Returns policy** wording (fragrance and used appliances often differ; his call).

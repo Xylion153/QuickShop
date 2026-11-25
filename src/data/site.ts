@@ -9,7 +9,7 @@ export const site = {
   // Where the shop ships from (owner, 2026-11-25).
   shipsFrom: "Florida",
   // The owner's current eBay store or seller page. When set, the header, home page and footer link to it.
-  ebayStoreUrl: null as string | null,
+  ebayStoreUrl: "https://www.ebay.com/str/cristobalshop" as string | null, // owner, 2026-11-25
   supportEmail: null as string | null,
   supportPhone: null as string | null,
   instagramHandle: null as string | null,
