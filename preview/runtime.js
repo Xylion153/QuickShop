@@ -63,6 +63,16 @@
     }));
   }
 
+  // Product photo thumbnails swap the main photo.
+  main.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-gallery-src]");
+    if (!btn) return;
+    const g = btn.closest("[data-gallery]");
+    const img = g.querySelector("[data-gallery-main] img");
+    if (img) img.src = btn.dataset.gallerySrc.replace(/^\//, "");
+    g.querySelectorAll("[data-gallery-src]").forEach((b) => (b === btn ? b.setAttribute("aria-current", "true") : b.removeAttribute("aria-current")));
+  });
+
   function route() {
     const h = location.hash.replace(/^#/, "") || "home";
     main.innerHTML = D.pages[h] ?? D.pages["not-found"];

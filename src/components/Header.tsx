@@ -9,7 +9,7 @@ import { CloseIcon, MenuIcon, SearchIcon } from "./Icons";
 export const navLinks = [
   { href: "/shop", label: "Shop all" },
   { href: "/collections/fragrance", label: "Fragrance" },
-  { href: "/collections/appliances", label: "Appliances" },
+  { href: "/collections/home-kitchen", label: "Home & kitchen" },
   { href: "/collections/appliance-parts", label: "Parts" },
   { href: "/contact", label: "Contact" },
 ];

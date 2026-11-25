@@ -3,7 +3,7 @@ import { site } from "@/data/site";
 import Logo from "./Logo";
 
 const cols = [
-  { title: "Shop", items: [["/shop", "Shop all"], ["/collections/fragrance", "Fragrance"], ["/collections/appliances", "Appliances"], ["/collections/appliance-parts", "Appliance parts"]] },
+  { title: "Shop", items: [["/shop", "Shop all"], ["/collections/fragrance", "Fragrance"], ["/collections/home-kitchen", "Home & kitchen"], ["/collections/appliance-parts", "Appliance parts"]] },
   { title: "Help", items: [["/contact", "Contact"], ["/shipping-policy", "Shipping"], ["/returns-policy", "Returns"], ["/conditions", "Condition guide"]] },
   { title: "Legal", items: [["/privacy-policy", "Privacy"], ["/terms", "Terms"]] },
 ] as const;

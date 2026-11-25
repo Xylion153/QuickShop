@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ConditionChip, Price, ProductGrid, ProductImage, StockChip, Todo } from "@/components/ProductBits";
+import { ConditionChip, Price, ProductGrid, StockChip, Todo } from "@/components/ProductBits";
+import Gallery from "@/components/Gallery";
 import { ChatIcon, ExternalIcon, StarIcon, TruckIcon } from "@/components/Icons";
 import { activeProducts, conditions, formatPrice, getCategory, getProduct, hasPhoto, isSoldOut } from "@/data/catalog";
 import { policies, site } from "@/data/site";
@@ -53,13 +54,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <div className="mx-auto grid max-w-6xl gap-6 px-4 pt-2 md:grid-cols-2 md:items-start md:gap-12">
         <div className="md:sticky md:top-24">
-          <ProductImage product={p} eager className="rounded-[1.5rem] border border-line" />
+          <Gallery product={p} />
           {!hasPhoto(p) && !p.sample && <p className="mt-2 text-sm text-muted">Illustration only.{p.ebayUrl && <> <a href={p.ebayUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-signal-ink underline">See photos on eBay</a></>}</p>}
-          {p.images.length > 1 && (
-            <ul className="swipe mt-3" aria-label="More photos">
-              {p.images.slice(1).map((src) => <li key={src} className="w-24"><ProductImage product={p} src={src} className="rounded-xl border border-line" /></li>)}
-            </ul>
-          )}
         </div>
 
         <div>

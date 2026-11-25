@@ -7,7 +7,11 @@ named QUICKSHOP). Page 1 of that store (46 appliance parts) is imported into `sr
 1. **What the site should lead with.** His eBay store is almost all appliance *replacement parts* (page 1 had no
    cologne and no whole appliances), but the home page headline says "Cologne. Appliances." Confirm whether he's
    starting to sell fragrance and whole appliances, or whether the site should lead with parts.
-2. **Real fragrance/appliance listings and photos** to replace the six sample items in `src/data/catalog.ts`.
+2. **Real home/appliance listings.** Five of his colognes and a Luminarc glass set are on the site now
+   (`src/data/ebay-listings.ts`, from listings he shared on 2026-11-25). The "Appliances" category was renamed
+   "Home & kitchen" so the glasses fit; three sample appliances are still placeholders there.
+   His eBay listings show free shipping and 14-day returns on most items, but one listing says no returns:
+   confirm what the site's own shipping and returns policies should say before writing them.
 3. **The rest of his eBay listings.** Only store page 1 (48 listings) could be read; the store shows about 10 pages.
    Not imported from page 1: a hair-brush set and Nike sneakers (no matching category). Each part's main photo and
    listed condition (all "Used") were copied from its own eBay listing on 2026-11-25; stock isn't known. Prices were
