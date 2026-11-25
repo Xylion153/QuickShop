@@ -22,6 +22,8 @@ const clean = (html) =>
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<link[^>]*>/g, "")
     .replace(/src="\/art\//g, 'data-art="/art/')
+    // Product photos stay separate files next to index.html (copied below), loaded by relative path.
+    .replace(/src="\/products\//g, 'src="products/')
     .replace(/\ssrcSet="[^"]*"/gi, "")
     .replace(/href="(\/[^"#?]*)(\?[^"]*)?"/g, (m, p) => { const h = hashOf(p.replace(/\/$/, "") || "/"); return known.has(h) ? `href="#${h}"` : m; });
 
@@ -77,4 +79,6 @@ ${header}<main id="main" class="flex-1"></main>${footer}
 <script>window.__QS=${json};</script><script>${runtime}</script></body></html>`;
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, out);
+const photosDir = path.join(ROOT, "public", "products");
+if (fs.existsSync(photosDir)) fs.cpSync(photosDir, path.join(path.dirname(OUT), "products"), { recursive: true });
 console.log(`preview written: ${OUT} (${(out.length / 1024).toFixed(0)} KB, ${Object.keys(pages).length} pages)`);

@@ -14,7 +14,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const p = getProduct((await params).slug);
   if (!p) return {};
-  return { title: p.name, description: `${p.condition ? `${conditions[p.condition].label}. ` : ""}${formatPrice(p.priceCents)}. ${p.description}`, openGraph: { images: [p.images[0]] } };
+  return { title: p.name, description: `${p.condition ? `${conditions[p.condition].label}. ` : p.listedCondition ? `${p.listedCondition}. ` : ""}${formatPrice(p.priceCents)}. ${p.description}`, openGraph: { images: [p.images[0]] } };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -81,11 +81,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </ul>
 
           <section className="card mt-6 p-5" aria-labelledby="cond">
-            <h2 id="cond" className="font-bold">Condition: {condition ? condition.label : "see listing"}</h2>
+            <h2 id="cond" className="font-bold">Condition: {condition ? condition.label : p.listedCondition ?? "see listing"}</h2>
             <p className="mt-1 text-[15px] text-muted">
               {condition
                 ? <>{condition.description} <Link href="/conditions" className="font-semibold text-signal-ink underline">Condition guide</Link></>
-                : p.ebayUrl ? <>The <a href={p.ebayUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-signal-ink underline">eBay listing</a> shows this item&apos;s condition and photos.</> : "Ask us about this item's condition."}
+                : p.ebayUrl ? <>{p.listedCondition ? "As listed on eBay. " : ""}The <a href={p.ebayUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-signal-ink underline">eBay listing</a> has more photos and details.</> : "Ask us about this item's condition."}
             </p>
             {p.conditionNotes && <p className="mt-3 border-t border-line pt-3 text-[15px]"><strong>Seller notes:</strong> {p.conditionNotes}</p>}
           </section>

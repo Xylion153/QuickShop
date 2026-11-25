@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { conditions, formatPrice, isSoldOut, type Product } from "@/data/catalog";
 
 export function ConditionChip({ product }: { product: Product }) {
-  if (!product.condition) return null;
+  if (!product.condition) return product.listedCondition ? <span className="chip chip-neutral">{product.listedCondition}</span> : null;
   const c = conditions[product.condition];
   return <span className={`chip chip-${c.tone}`}>{c.label}</span>;
 }
@@ -56,7 +56,7 @@ export function ProductCard({ product, eager = false }: { product: Product; eage
         </h3>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1 pt-1.5">
           <Price product={product} />
-          {product.ebayUrl ? <span className="text-xs font-semibold text-muted">on eBay</span> : <ConditionChip product={product} />}
+          <ConditionChip product={product} />
         </div>
         {product.sample && <p className="text-[11px] font-medium uppercase tracking-wider text-muted/80">Sample listing</p>}
       </div>
