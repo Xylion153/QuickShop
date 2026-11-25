@@ -34,22 +34,24 @@ export default function Home() {
 
       {/* ---------- hero ---------- */}
       <section className="border-b border-line bg-card">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-10 pt-9 md:grid-cols-[1.05fr_.95fr] md:items-center md:gap-12 md:pb-16 md:pt-16">
-          <div>
-            <h1 className="headline text-[54px] sm:text-7xl lg:text-[84px]">Cologne.<br />Appliances.<br /><span className="text-signal">Quick.</span></h1>
-            <p className="mt-5 max-w-md text-lg leading-relaxed text-muted">Fragrance, home appliances and replacement parts, resold and shipped from {site.shipsFrom}. Search parts by part number and buy straight from our eBay listings.</p>
-            <div className="mt-7 grid gap-3 sm:flex">
-              <Link href="/shop" className="btn btn-primary">Shop all items <ArrowRight /></Link>
-              <Link href="/collections/appliance-parts" className="btn btn-ghost">Find a part</Link>
+        <div className="mx-auto max-w-3xl px-4 pb-10 pt-12 text-center sm:pb-14 sm:pt-20">
+          <h1 className="headline text-[52px] sm:text-7xl lg:text-[84px]">Cologne. Appliances. <span className="text-signal">Quick.</span></h1>
+          <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted">Fragrance, home appliances and replacement parts, resold and shipped from {site.shipsFrom}. Buy straight from our eBay listings.</p>
+          <Form action="/shop" role="search" className="mx-auto mt-8 flex max-w-xl flex-col gap-2.5 sm:flex-row sm:rounded-full sm:border sm:border-line sm:bg-paper sm:p-1.5 sm:shadow-[0_12px_30px_-18px_rgba(21,23,28,.35)]">
+            <label htmlFor="hero-q" className="sr-only">Search products or part numbers</label>
+            <div className="relative flex-1">
+              <SearchIcon className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
+              <input id="hero-q" name="q" type="search" placeholder={partsCount > 0 ? "Search products or part numbers" : "Search products"} enterKeyHint="search" autoComplete="off"
+                className="h-13 w-full rounded-full border border-line bg-paper pl-12 pr-4 text-base outline-none placeholder:text-muted focus:border-ink sm:h-12 sm:border-0 sm:bg-transparent" />
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-3 sm:gap-4" aria-hidden="true">
-            {[["air-fryer", "knob-bisque"], ["bottle-round", "rotary-switch"]].map((col, i) => (
-              <div key={i} className={`grid gap-3 sm:gap-4 ${i === 1 ? "pt-10 sm:pt-14" : ""}`}>
-                {col.map((a) => <img key={a} src={`/art/products/${a}.svg`} alt="" width={600} height={600} className="aspect-square w-full rounded-[1.5rem] shadow-[0_18px_40px_-22px_rgba(21,23,28,.35)] ring-1 ring-black/5" />)}
-              </div>
+            <button type="submit" className="btn btn-primary">Search</button>
+          </Form>
+          <p className="mt-4 text-sm text-muted">
+            or browse{" "}
+            {categories.map((c, i) => (
+              <span key={c.slug}>{i > 0 && (i === categories.length - 1 ? " and " : ", ")}<Link href={`/collections/${c.slug}`} className="font-semibold text-ink underline decoration-line underline-offset-4 hover:decoration-ink">{c.name.toLowerCase()}</Link></span>
             ))}
-          </div>
+          </p>
         </div>
         {/* trust row: real numbers from the eBay store (site.ebayStats) */}
         <ul className="mx-auto grid max-w-6xl grid-cols-1 border-t border-line sm:grid-cols-3">
@@ -90,23 +92,6 @@ export default function Home() {
             <Link href="/shop" className="inline-flex min-h-11 items-center gap-1 font-bold text-signal-ink hover:underline">Shop all <ArrowRight /></Link>
           </div>
           <div className="mt-6"><ProductGrid products={featured} /></div>
-        </section>
-      )}
-
-      {/* ---------- part finder ---------- */}
-      {partsCount > 0 && (
-        <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-20" aria-labelledby="finder">
-          <div className="relative overflow-hidden rounded-[1.75rem] bg-ink px-6 py-9 text-white sm:px-10 sm:py-12">
-            <img src="/art/products/push-switch.svg" alt="" width={600} height={600} className="pointer-events-none absolute -right-10 -top-6 hidden w-64 rotate-6 rounded-3xl opacity-90 shadow-2xl md:block" aria-hidden="true" />
-            <h2 id="finder" className="headline max-w-lg text-3xl sm:text-[44px]">Need a part? Search by part number.</h2>
-            <p className="mt-3 max-w-md text-white/70">{partsCount} parts for refrigerators, washers, dryers and ranges. Spaces and dashes don&apos;t matter.</p>
-            <Form action="/collections/appliance-parts" role="search" className="mt-6 flex max-w-lg flex-col gap-3 sm:flex-row">
-              <label htmlFor="finder-q" className="sr-only">Part number</label>
-              <input id="finder-q" name="q" type="search" placeholder="e.g. W10285511" enterKeyHint="search" autoComplete="off"
-                className="h-12 flex-1 rounded-full border border-white/15 bg-white/10 px-5 text-base text-white outline-none placeholder:text-white/45 focus:border-white/60" />
-              <button type="submit" className="btn btn-primary">Find part</button>
-            </Form>
-          </div>
         </section>
       )}
 
