@@ -28,3 +28,12 @@ export const ChatIcon = ({ className = "h-5 w-5" }: P) => (
 export const BoltMark = ({ className = "h-6 w-6" }: P) => (
   <svg viewBox="0 0 32 32" className={className} aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--signal)" /><path d="M18.5 5 8.5 18h6l-1.5 9 10-13h-6l1.5-9z" fill="#fff" /></svg>
 );
+export const SearchIcon = ({ className = "h-5 w-5" }: P) => (
+  <svg viewBox="0 0 24 24" className={className} {...base} strokeWidth={2}><circle cx="11" cy="11" r="6.5" /><path d="M20 20l-4.2-4.2" /></svg>
+);
+export const StarIcon = ({ className = "h-5 w-5" }: P) => (
+  <svg viewBox="0 0 24 24" className={className} {...base}><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z" /></svg>
+);
+export const BoxIcon = ({ className = "h-5 w-5" }: P) => (
+  <svg viewBox="0 0 24 24" className={className} {...base}><path d="M3.5 7.5L12 3l8.5 4.5v9L12 21l-8.5-4.5z" /><path d="M3.5 7.5L12 12l8.5-4.5M12 12v9" /></svg>
+);

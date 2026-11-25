@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ConditionChip, Price, ProductGrid, ProductImage, StockChip, Todo } from "@/components/ProductBits";
-import { ChatIcon, ChevronLeft, ExternalIcon, TruckIcon } from "@/components/Icons";
+import { ChatIcon, ExternalIcon, StarIcon, TruckIcon } from "@/components/Icons";
 import { activeProducts, conditions, formatPrice, getCategory, getProduct, hasPhoto, isSoldOut } from "@/data/catalog";
 import { policies, site } from "@/data/site";
 
@@ -41,13 +41,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <div className="mx-auto max-w-6xl px-4 pt-4">
-        <Link href={`/collections/${category.slug}`} className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-muted hover:text-ink"><ChevronLeft /> {category.name}</Link>
-        {p.sample && <div className="mt-2"><Todo>this is a sample listing. Replace it with a real item in <code>src/data/catalog.ts</code>.</Todo></div>}
+        <nav aria-label="Breadcrumb">
+          <ol className="flex flex-wrap items-center gap-x-2 text-sm font-medium text-muted">
+            <li><Link href="/shop" className="inline-flex min-h-11 items-center hover:text-ink">Shop</Link></li>
+            <li aria-hidden="true">/</li>
+            <li><Link href={`/collections/${category.slug}`} className="inline-flex min-h-11 items-center hover:text-ink">{category.name}</Link></li>
+          </ol>
+        </nav>
+        {p.sample && <Todo className="mt-2" fallback={<p className="mt-1 text-sm text-muted">Sample listing: shows how a product page will look.</p>}>this is a sample listing. Replace it with a real item in <code>src/data/catalog.ts</code>.</Todo>}
       </div>
 
-      <div className="mx-auto grid max-w-6xl gap-6 px-4 pt-4 md:grid-cols-2 md:gap-10">
-        <div>
-          <ProductImage product={p} eager className="rounded-2xl border border-line" />
+      <div className="mx-auto grid max-w-6xl gap-6 px-4 pt-2 md:grid-cols-2 md:items-start md:gap-12">
+        <div className="md:sticky md:top-24">
+          <ProductImage product={p} eager className="rounded-[1.5rem] border border-line" />
           {!hasPhoto(p) && !p.sample && <p className="mt-2 text-sm text-muted">Illustration only.{p.ebayUrl && <> <a href={p.ebayUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-signal-ink underline">See photos on eBay</a></>}</p>}
           {p.images.length > 1 && (
             <ul className="swipe mt-3" aria-label="More photos">
@@ -57,8 +63,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         </div>
 
         <div>
-          {p.brand && <p className="text-sm font-bold uppercase tracking-[.1em] text-muted">{p.brand}</p>}
-          <h1 className="headline mt-1 text-3xl sm:text-4xl">{p.name}</h1>
+          {p.brand && !p.name.toLowerCase().startsWith(p.brand.toLowerCase()) && <p className="text-sm font-semibold text-muted">{p.brand}</p>}
+          <h1 className="mt-1 text-[28px] font-extrabold leading-[1.1] tracking-tight sm:text-[40px]">{p.name}</h1>
           <div className="mt-4 flex flex-wrap gap-2"><ConditionChip product={p} /><StockChip product={p} /></div>
           <div className="mt-5"><Price product={p} large /></div>
           {p.priceCheckedOn && <p className="mt-1 text-sm text-muted">eBay price as of {new Date(`${p.priceCheckedOn}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}. The listing shows today&apos;s price.</p>}
@@ -68,6 +74,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {!soldOut && p.ebayUrl && <Link href={askHref} className="btn btn-ghost"><ChatIcon /> Ask about this item</Link>}
           </div>
           {!site.checkoutEnabled && !soldOut && !p.ebayUrl && <p className="mt-3 text-sm text-muted">Online checkout is coming soon. Send a message and we&apos;ll arrange payment and shipping with you.</p>}
+
+          <ul className="mt-6 grid gap-3 rounded-2xl bg-card p-4 text-[15px] ring-1 ring-line">
+            <li className="flex items-center gap-3"><TruckIcon className="h-5 w-5 shrink-0 text-signal-ink" /> Ships from {site.shipsFrom}. <Link href="/shipping-policy" className="ml-auto shrink-0 text-sm font-semibold text-muted underline">Shipping</Link></li>
+            {site.ebayStats && <li className="flex items-center gap-3"><StarIcon className="h-5 w-5 shrink-0 text-signal-ink" /> {site.ebayStats.feedbackPercent} positive feedback on eBay</li>}
+          </ul>
 
           <section className="card mt-6 p-5" aria-labelledby="cond">
             <h2 id="cond" className="font-bold">Condition: {condition ? condition.label : "see listing"}</h2>
@@ -94,9 +105,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           {p.category === "fragrance" && (policies.authenticity
             ? <section className="mt-6"><h2 className="text-xl font-extrabold">About our fragrances</h2><p className="mt-2 leading-relaxed text-muted">{policies.authenticity}</p></section>
-            : <div className="mt-6"><Todo>how fragrances are sourced and checked, in the owner&apos;s words (<code>policies.authenticity</code> in <code>src/data/site.ts</code>).</Todo></div>)}
-
-          <p className="mt-6 flex items-center gap-2 text-[15px] text-muted"><TruckIcon /> Ships from {site.shipsFrom}. <Link href="/shipping-policy" className="font-semibold text-signal-ink underline">Shipping</Link></p>
+            : <Todo className="mt-6">how fragrances are sourced and checked, in the owner&apos;s words (<code>policies.authenticity</code> in <code>src/data/site.ts</code>).</Todo>)}
         </div>
       </div>
 

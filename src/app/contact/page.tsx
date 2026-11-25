@@ -37,7 +37,7 @@ export default async function Contact({ searchParams }: { searchParams: Promise<
         {site.ebayStoreUrl && <a href={site.ebayStoreUrl} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">Message us on eBay <ExternalIcon /></a>}
       </div>
 
-      {!hasAny && <div className="mt-6"><Todo>at least one way to reach the shop: <code>supportEmail</code>, <code>supportPhone</code> or <code>ebayStoreUrl</code> in <code>src/data/site.ts</code>.</Todo></div>}
+      {!hasAny && <Todo className="mt-6">at least one way to reach the shop: <code>supportEmail</code>, <code>supportPhone</code> or <code>ebayStoreUrl</code> in <code>src/data/site.ts</code>.</Todo>}
 
       <dl className="card mt-8 divide-y divide-line">
         <div className="p-4"><dt className="text-sm text-muted">Ships from</dt><dd className="font-semibold">{site.shipsFrom}</dd></div>

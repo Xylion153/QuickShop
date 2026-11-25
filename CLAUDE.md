@@ -8,6 +8,9 @@ storefront only (no cart, checkout, payments, admin or database). See `README.md
 ## Hard rules
 - Never invent business details, prices, stock, policies, shipping rates, testimonials or guarantees. Unknown
   values stay `null` in `src/data/site.ts`; the UI hides them or shows a `<Todo>` box. List new unknowns in OPEN_DECISIONS.md.
+- `<Todo>` boxes show in `npm run dev` (or with `NEXT_PUBLIC_SHOW_TODOS=1`); production builds show the `fallback`
+  (a neutral customer-facing line) or nothing. So check `npm run dev` for what's still missing before launch.
+- `site.ebayStats` are real numbers from the eBay store page (dated). Refresh them or set to null; never round up.
 - Never claim fragrances are authentic/genuine unless the owner's own wording says so (`policies.authenticity`).
 - Sample listings (`sample: true`) use generic names, never real brands. `LAUNCH=1 npm test` must pass before going public.
 - Verify current docs for Next.js 16 and Tailwind v4 before using an API from memory (`node_modules/next/dist/docs/`).

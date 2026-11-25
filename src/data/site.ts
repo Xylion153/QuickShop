@@ -10,6 +10,11 @@ export const site = {
   shipsFrom: "Florida",
   // The owner's current eBay store or seller page. When set, the header, home page and footer link to it.
   ebayStoreUrl: "https://www.ebay.com/str/cristobalshop" as string | null, // owner, 2026-11-25
+  // Public numbers from the eBay store page as shown on `checkedOn`. They're real but change over time: update them
+  // now and then, or set ebayStats to null to hide them (announcement bar, home page trust row).
+  ebayStats: { feedbackPercent: "97.8%", itemsSold: "27K+", checkedOn: "2026-11-25" } as
+    | { feedbackPercent: string; itemsSold: string; checkedOn: string }
+    | null,
   supportEmail: null as string | null,
   supportPhone: null as string | null,
   instagramHandle: null as string | null,

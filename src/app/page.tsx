@@ -1,92 +1,152 @@
 import Link from "next/link";
+import Form from "next/form";
 import { ProductGrid, Todo } from "@/components/ProductBits";
-import { ArrowRight, ChatIcon, TagIcon, TruckIcon } from "@/components/Icons";
+import { ArrowRight, BoxIcon, ChatIcon, SearchIcon, StarIcon, TagIcon, TruckIcon } from "@/components/Icons";
 import { activeProducts, categories, inCategory, isSoldOut } from "@/data/catalog";
 import { site } from "@/data/site";
 
 export default function Home() {
   const all = activeProducts();
   const featured = all.filter((p) => p.featured && !isSoldOut(p)).slice(0, 4);
-  const latest = all.filter((p) => !featured.includes(p)).slice(0, 8);
+  const latest = all.filter((p) => !featured.includes(p) && !isSoldOut(p)).slice(0, 8);
   const hasSamples = all.some((p) => p.sample);
+  const partsCount = inCategory("appliance-parts").length;
+  const stats = site.ebayStats;
+
+  const trust = [
+    stats && { icon: StarIcon, big: stats.feedbackPercent, small: "positive feedback on eBay" },
+    stats && { icon: BoxIcon, big: stats.itemsSold, small: "items sold on eBay" },
+    { icon: TruckIcon, big: site.shipsFrom, small: "where orders ship from" },
+  ].filter(Boolean) as { icon: typeof StarIcon; big: string; small: string }[];
 
   const howToBuy = [
-    { icon: TagIcon, title: "Find it fast", text: "Search any shop page by name or part number." },
+    { icon: SearchIcon, title: "Find it fast", text: "Search any shop page by name, brand or part number." },
     site.ebayStoreUrl
-      ? { icon: ArrowRight, title: "Buy on eBay", text: "Items that are also on eBay have a button straight to the listing." }
-      : { icon: ArrowRight, title: "Buy your way", text: "Online checkout is on the way. For now, ask about any item and we'll sort it out." },
-    { icon: ChatIcon, title: "Questions? Just ask", text: "Every product page has an \"Ask about this item\" button." },
-    { icon: TruckIcon, title: `Ships from ${site.shipsFrom}`, text: site.processingTime ?? "Shipping details are on the shipping page." },
+      ? { icon: TagIcon, title: "Buy on eBay", text: "Items listed on eBay have a button straight to the listing, with eBay checkout." }
+      : { icon: TagIcon, title: "Buy your way", text: "Online checkout is on the way. For now, ask about any item and we'll sort it out." },
+    { icon: ChatIcon, title: "Questions? Just ask", text: "Every product page has an “Ask about this item” button." },
+    { icon: TruckIcon, title: `Ships from ${site.shipsFrom}`, text: site.processingTime ?? "Packed and shipped by us. Details are on the shipping page." },
   ];
 
   return (
     <>
-      {hasSamples && (
-        <div className="mx-auto max-w-6xl px-4 pt-4">
-          <Todo>this store is showing sample listings. Replace them with real items in <code>src/data/catalog.ts</code>.</Todo>
-        </div>
-      )}
+      {hasSamples && <Todo className="mx-4 mt-4 xl:mx-auto xl:max-w-6xl">this store is showing sample listings. Replace them with real items in <code>src/data/catalog.ts</code>.</Todo>}
 
-      <section className="stripes border-b border-line">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-10 pt-8 md:grid-cols-[1.15fr_.85fr] md:items-center md:pb-16 md:pt-14">
+      {/* ---------- hero ---------- */}
+      <section className="border-b border-line bg-card">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 pb-10 pt-9 md:grid-cols-[1.05fr_.95fr] md:items-center md:gap-12 md:pb-16 md:pt-16">
           <div>
-            <p className="eyebrow">Shipped from {site.shipsFrom}</p>
-            <h1 className="headline mt-3 text-[52px] sm:text-7xl">Cologne.<br />Appliances.<br /><span className="text-signal">Quick.</span></h1>
-            <p className="mt-5 max-w-md text-lg text-muted">Fragrance, home appliances and replacement parts, resold. Search parts by part number and buy straight from our eBay listings.</p>
+            <h1 className="headline text-[54px] sm:text-7xl lg:text-[84px]">Cologne.<br />Appliances.<br /><span className="text-signal">Quick.</span></h1>
+            <p className="mt-5 max-w-md text-lg leading-relaxed text-muted">Fragrance, home appliances and replacement parts, resold and shipped from {site.shipsFrom}. Search parts by part number and buy straight from our eBay listings.</p>
             <div className="mt-7 grid gap-3 sm:flex">
               <Link href="/shop" className="btn btn-primary">Shop all items <ArrowRight /></Link>
-              {site.ebayStoreUrl
-                ? <a href={site.ebayStoreUrl} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">See our eBay store</a>
-                : <Link href="/conditions" className="btn btn-ghost">Condition guide</Link>}
+              <Link href="/collections/appliance-parts" className="btn btn-ghost">Find a part</Link>
             </div>
           </div>
-          <ul className="grid grid-cols-3 gap-2.5 sm:gap-3">
-            {categories.map((c) => (
-              <li key={c.slug}>
-                <Link href={`/collections/${c.slug}`} className={`tile-${c.slug} product-card group flex h-full flex-col overflow-hidden rounded-2xl border border-line`}>
-                  <img src={c.art} alt="" width={300} height={300} loading="eager" className="aspect-square w-full object-contain p-1" />
-                  <span className="flex flex-1 items-end justify-between gap-1 bg-card px-3 py-3 sm:px-4">
-                    <span>
-                      <span className="block text-[15px] font-extrabold leading-tight sm:text-lg">{c.name}</span>
-                      <span className="mt-0.5 block text-xs text-muted sm:text-sm">{inCategory(c.slug).length} items</span>
-                    </span>
-                    <ArrowRight className="hidden h-5 w-5 shrink-0 text-signal transition-transform group-hover:translate-x-0.5 sm:block" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {featured.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 pt-12" aria-labelledby="featured">
-          <div className="flex items-end justify-between gap-4">
-            <div><p className="eyebrow">Picked for you</p><h2 id="featured" className="headline mt-2 text-3xl sm:text-4xl">Featured</h2></div>
+          <div className="hero-collage relative mx-auto aspect-square w-full max-w-[440px] md:max-w-none" aria-hidden="true">
+            <div className="absolute inset-[6%] rounded-[2rem] bg-ink" />
+            <img src="/art/products/air-fryer.svg" alt="" width={600} height={600} className="absolute left-[2%] top-[4%] w-[52%] rounded-3xl shadow-xl ring-1 ring-black/5" />
+            <img src="/art/products/bottle-round.svg" alt="" width={600} height={600} className="absolute right-[2%] top-[18%] w-[46%] rounded-3xl shadow-xl ring-1 ring-black/5" />
+            <img src="/art/products/knob-bisque.svg" alt="" width={600} height={600} className="absolute bottom-[2%] left-[22%] w-[48%] rounded-3xl shadow-2xl ring-1 ring-black/5" />
           </div>
-          <div className="mt-6"><ProductGrid products={featured} eagerFirst={2} /></div>
-        </section>
-      )}
-
-      <section className="mx-auto max-w-6xl px-4 pt-14" aria-labelledby="how">
-        <h2 id="how" className="headline text-3xl sm:text-4xl">How buying works</h2>
-        <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {howToBuy.map(({ icon: Icon, title, text }) => (
-            <li key={title} className="card flex gap-4 p-5 lg:block">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-signal-soft text-signal-ink"><Icon className="h-5 w-5" /></span>
-              <div><h3 className="font-bold lg:mt-4">{title}</h3><p className="mt-1 text-[15px] text-muted">{text}</p></div>
+        </div>
+        {/* trust row: real numbers from the eBay store (site.ebayStats) */}
+        <ul className="mx-auto grid max-w-6xl grid-cols-1 border-t border-line sm:grid-cols-3">
+          {trust.map(({ icon: Icon, big, small }) => (
+            <li key={small} className="flex items-center gap-4 border-b border-line px-4 py-4 last:border-b-0 sm:border-b-0 sm:border-r sm:py-5 sm:last:border-r-0">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-signal-soft text-signal-ink"><Icon className="h-5 w-5" /></span>
+              <p className="leading-tight"><span className="block text-xl font-extrabold tracking-tight">{big}</span><span className="text-sm text-muted">{small}</span></p>
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pt-14" aria-labelledby="latest">
-        <div className="flex items-end justify-between gap-4">
-          <div><p className="eyebrow">Fresh in</p><h2 id="latest" className="headline mt-2 text-3xl sm:text-4xl">Just added</h2></div>
-          <Link href="/shop" className="inline-flex min-h-11 items-center gap-1 font-bold text-signal-ink hover:underline">See all <ArrowRight /></Link>
-        </div>
-        <div className="mt-6"><ProductGrid products={latest} /></div>
+      {/* ---------- categories ---------- */}
+      <section className="mx-auto max-w-6xl px-4 pt-12 md:pt-16" aria-labelledby="cats">
+        <h2 id="cats" className="headline text-3xl sm:text-4xl">Shop by category</h2>
+        <ul className="mt-6 grid gap-3 sm:grid-cols-3 sm:gap-5">
+          {categories.map((c) => (
+            <li key={c.slug}>
+              <Link href={`/collections/${c.slug}`} className="product-card group relative flex overflow-hidden rounded-2xl border border-line bg-card sm:block">
+                <img src={c.art} alt="" width={600} height={600} loading="lazy" className="aspect-square w-28 shrink-0 object-cover transition-transform duration-500 group-hover:scale-[1.04] sm:w-full" />
+                <span className="flex flex-1 items-center justify-between gap-3 px-4 py-4 sm:px-5">
+                  <span>
+                    <span className="block text-lg font-extrabold">{c.name}</span>
+                    <span className="mt-0.5 block text-sm text-muted">{inCategory(c.slug).length} items</span>
+                  </span>
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-paper text-ink transition-colors group-hover:bg-signal group-hover:text-white"><ArrowRight /></span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
+
+      {featured.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-20" aria-labelledby="featured">
+          <div className="flex items-end justify-between gap-4">
+            <h2 id="featured" className="headline text-3xl sm:text-4xl">Featured</h2>
+            <Link href="/shop" className="inline-flex min-h-11 items-center gap-1 font-bold text-signal-ink hover:underline">Shop all <ArrowRight /></Link>
+          </div>
+          <div className="mt-6"><ProductGrid products={featured} /></div>
+        </section>
+      )}
+
+      {/* ---------- part finder ---------- */}
+      {partsCount > 0 && (
+        <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-20" aria-labelledby="finder">
+          <div className="relative overflow-hidden rounded-[1.75rem] bg-ink px-6 py-9 text-white sm:px-10 sm:py-12">
+            <img src="/art/products/push-switch.svg" alt="" width={600} height={600} className="pointer-events-none absolute -right-10 -top-6 hidden w-64 rotate-6 rounded-3xl opacity-90 shadow-2xl md:block" aria-hidden="true" />
+            <h2 id="finder" className="headline max-w-lg text-3xl sm:text-[44px]">Need a part? Search by part number.</h2>
+            <p className="mt-3 max-w-md text-white/70">{partsCount} parts for refrigerators, washers, dryers and ranges. Spaces and dashes don&apos;t matter.</p>
+            <Form action="/collections/appliance-parts" role="search" className="mt-6 flex max-w-lg flex-col gap-3 sm:flex-row">
+              <label htmlFor="finder-q" className="sr-only">Part number</label>
+              <input id="finder-q" name="q" type="search" placeholder="e.g. W10285511" enterKeyHint="search" autoComplete="off"
+                className="h-12 flex-1 rounded-full border border-white/15 bg-white/10 px-5 text-base text-white outline-none placeholder:text-white/45 focus:border-white/60" />
+              <button type="submit" className="btn btn-primary">Find part</button>
+            </Form>
+          </div>
+        </section>
+      )}
+
+      {/* ---------- how buying works ---------- */}
+      <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-20" aria-labelledby="how">
+        <h2 id="how" className="headline text-3xl sm:text-4xl">How buying works</h2>
+        <ul className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+          {howToBuy.map(({ icon: Icon, title, text }) => (
+            <li key={title} className="flex gap-4 bg-card p-5 lg:block lg:p-6">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-paper text-ink"><Icon className="h-5 w-5" /></span>
+              <div><h3 className="font-bold lg:mt-5">{title}</h3><p className="mt-1 text-[15px] leading-relaxed text-muted">{text}</p></div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {latest.length > 0 && (
+        <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-20" aria-labelledby="latest">
+          <div className="flex items-end justify-between gap-4">
+            <h2 id="latest" className="headline text-3xl sm:text-4xl">Just added</h2>
+            <Link href="/shop" className="inline-flex min-h-11 items-center gap-1 font-bold text-signal-ink hover:underline">See all <ArrowRight /></Link>
+          </div>
+          <div className="mt-6"><ProductGrid products={latest} /></div>
+        </section>
+      )}
+
+      {/* ---------- eBay band ---------- */}
+      {site.ebayStoreUrl && (
+        <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-20">
+          <div className="flex flex-col items-start gap-5 rounded-[1.75rem] border border-line bg-card px-6 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-10">
+            <div>
+              <h2 className="text-2xl font-extrabold tracking-tight">Also on eBay</h2>
+              <p className="mt-1 max-w-md text-muted">
+                {stats ? <>{stats.feedbackPercent} positive feedback across {stats.itemsSold} items sold. </> : null}
+                Follow the store for new listings.
+              </p>
+            </div>
+            <a href={site.ebayStoreUrl} target="_blank" rel="noopener noreferrer" className="btn btn-dark shrink-0">Visit our eBay store</a>
+          </div>
+        </section>
+      )}
     </>
   );
 }

@@ -22,7 +22,8 @@ Until online checkout exists, each product page shows **Buy on eBay** (when the 
 
 ## Making it his
 1. `src/data/site.ts`: eBay store link, email/phone, socials, shipping details, policy wording. Anything left
-   `null` is either hidden or shown as a dashed orange **To fill in** box, so nothing half-done slips through.
+   `null` is hidden, or shown as a dashed orange **To fill in** box in `npm run dev` (customers see a neutral
+   "we're finishing this page" line instead).
 2. `src/data/catalog.ts`: replace the six **sample** listings with real items. The appliance parts are real listings
    from his eBay store, kept in `src/data/ebay-parts.ts`. Put photos in `public/products/`.
    `LAUNCH=1 npm test` fails while any sample listing is still active.
