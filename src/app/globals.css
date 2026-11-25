@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/* ============ Quick Shop theme: warm paper, ink, signal orange ============
+   Change the brand by editing these variables; every page uses them. */
+:root {
+  --ink: #15171c;
+  --muted: #5b5f68;
+  --line: #e4e0d6;
+  --paper: #f6f3ec;
+  --card: #ffffff;
+  --signal: #ff5a1f;      /* brand orange: buttons, the logo bolt, highlights */
+  --signal-ink: #c2410c;  /* orange dark enough for text on white (AA) */
+  --signal-soft: #ffe8dc;
+  --fresh: #0f766e;       /* "new" conditions, in stock */
+  --fresh-soft: #dcf3ef;
+  --warn: #b45309;
+  --warn-soft: #fdf0d8;
+  --scent: #efe7f7;       /* fragrance tile tint */
+  --steel: #e3e9ee;       /* appliance tile tint */
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-paper: var(--paper);
+  --color-card: var(--card);
+  --color-signal: var(--signal);
+  --color-signal-ink: var(--signal-ink);
+  --color-signal-soft: var(--signal-soft);
+  --color-fresh: var(--fresh);
+  --color-fresh-soft: var(--fresh-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-scent: var(--scent);
+  --color-steel: var(--steel);
+  --font-sans: var(--font-body), system-ui, sans-serif;
+}
+
+/* ============ Base ============ */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 5rem; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { text-wrap: balance; }
+a, button, summary, label, input, select, textarea { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid var(--signal-ink); outline-offset: 3px; border-radius: 6px; }
+
+/* Big, tight, heavy headings: the "quick" voice of the brand */
+.headline { font-weight: 800; letter-spacing: -.035em; line-height: .98; }
+.eyebrow { font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--signal-ink); }
+
+/* ============ Components ============ */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; border-radius: .75rem; padding: .8rem 1.3rem; font-weight: 700; font-size: 1rem; min-height: 48px; transition: transform .15s, background .15s, box-shadow .15s; text-align: center; }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--signal); color: #fff; box-shadow: 0 3px 0 #c2410c; }
+@media (hover: hover) { .btn-primary:hover { background: #ff6a33; } }
+.btn-primary:active { box-shadow: 0 1px 0 #c2410c; transform: translateY(2px); }
+.btn-dark { background: var(--ink); color: #fff; }
+@media (hover: hover) { .btn-dark:hover { background: #2a2d34; } }
+.btn-ghost { background: var(--card); color: var(--ink); border: 1.5px solid var(--ink); }
+@media (hover: hover) { .btn-ghost:hover { background: var(--paper); } }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 1rem; }
+.chip { display: inline-flex; align-items: center; gap: .35rem; border-radius: 9999px; padding: .3rem .7rem; font-size: .78rem; font-weight: 700; line-height: 1.2; }
+.chip-fresh { background: var(--fresh-soft); color: var(--fresh); }
+.chip-neutral { background: #eceae4; color: #3f434b; }
+.chip-warn { background: var(--warn-soft); color: var(--warn); }
+.chip-sample { background: var(--signal-soft); color: var(--signal-ink); }
+.chip-out { background: var(--ink); color: #fff; }
+
+.product-card { transition: transform .2s, box-shadow .2s; }
+@media (hover: hover) { .product-card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(21, 23, 28, .08); } }
+.tile-fragrance { background: var(--scent); }
+.tile-appliances { background: var(--steel); }
+
+/* Placeholder notice: shows the owner what still needs real info. Easy to spot, never mistaken for shop copy. */
+.todo { border: 1.5px dashed var(--signal); background: var(--signal-soft); color: #7c2d12; border-radius: .75rem; padding: .75rem 1rem; font-size: .92rem; }
+
+/* Speed stripes behind the hero headline */
+.stripes { background-image: repeating-linear-gradient(-55deg, transparent 0 14px, rgba(255, 90, 31, .07) 14px 20px); }
+
+/* ============ Phone helpers ============ */
+.swipe { display: flex; gap: .75rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 1rem; overscroll-behavior-x: contain; scrollbar-width: none; }
+.swipe::-webkit-scrollbar { display: none; }
+.swipe > * { scroll-snap-align: start; flex-shrink: 0; }
+.mobile-bar { position: fixed; inset-inline: 0; bottom: 0; z-index: 30; background: rgba(255, 255, 255, .97); backdrop-filter: blur(10px); border-top: 1px solid var(--line); padding: .75rem 1rem calc(.75rem + env(safe-area-inset-bottom)); }
+.mobile-bar-space { height: calc(5.5rem + env(safe-area-inset-bottom)); }
+@media (min-width: 768px) { .mobile-bar, .mobile-bar-space { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn, .product-card { transition: none; }
+  .product-card:hover { transform: none; }
+}
