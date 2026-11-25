@@ -43,11 +43,12 @@ export default function Home() {
               <Link href="/collections/appliance-parts" className="btn btn-ghost">Find a part</Link>
             </div>
           </div>
-          <div className="hero-collage relative mx-auto aspect-square w-full max-w-[440px] md:max-w-none" aria-hidden="true">
-            <div className="absolute inset-[6%] rounded-[2rem] bg-ink" />
-            <img src="/art/products/air-fryer.svg" alt="" width={600} height={600} className="absolute left-[2%] top-[4%] w-[52%] rounded-3xl shadow-xl ring-1 ring-black/5" />
-            <img src="/art/products/bottle-round.svg" alt="" width={600} height={600} className="absolute right-[2%] top-[18%] w-[46%] rounded-3xl shadow-xl ring-1 ring-black/5" />
-            <img src="/art/products/knob-bisque.svg" alt="" width={600} height={600} className="absolute bottom-[2%] left-[22%] w-[48%] rounded-3xl shadow-2xl ring-1 ring-black/5" />
+          <div className="grid grid-cols-2 gap-3 sm:gap-4" aria-hidden="true">
+            {[["air-fryer", "knob-bisque"], ["bottle-round", "rotary-switch"]].map((col, i) => (
+              <div key={i} className={`grid gap-3 sm:gap-4 ${i === 1 ? "pt-10 sm:pt-14" : ""}`}>
+                {col.map((a) => <img key={a} src={`/art/products/${a}.svg`} alt="" width={600} height={600} className="aspect-square w-full rounded-[1.5rem] shadow-[0_18px_40px_-22px_rgba(21,23,28,.35)] ring-1 ring-black/5" />)}
+              </div>
+            ))}
           </div>
         </div>
         {/* trust row: real numbers from the eBay store (site.ebayStats) */}
