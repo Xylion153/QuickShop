@@ -1,13 +1,15 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { conditions, formatPrice, type Product } from "@/data/catalog";
+import { conditions, formatPrice, isSoldOut, type Product } from "@/data/catalog";
 
 export function ConditionChip({ product }: { product: Product }) {
+  if (!product.condition) return null;
   const c = conditions[product.condition];
   return <span className={`chip chip-${c.tone}`}>{c.label}</span>;
 }
 
 export function StockChip({ product }: { product: Product }) {
+  if (product.quantity === null) return null;
   if (product.quantity === 0) return <span className="chip chip-out">Sold out</span>;
   if (product.quantity === 1) return <span className="chip chip-neutral">Only 1 left</span>;
   return <span className="chip chip-neutral">{product.quantity} in stock</span>;
@@ -30,7 +32,7 @@ export function Price({ product, large = false }: { product: Product; large?: bo
 export function ProductImage({ product, src, eager = false, className = "" }: { product: Product; src?: string; eager?: boolean; className?: string }) {
   return (
     <div className={`tile-${product.category} relative aspect-square overflow-hidden ${className}`}>
-      <img src={src ?? product.images[0]} alt={`${product.name}`} width={600} height={600} loading={eager ? "eager" : "lazy"} decoding="async" className={`h-full w-full object-contain ${product.quantity === 0 ? "opacity-50 grayscale" : ""}`} />
+      <img src={src ?? product.images[0]} alt={`${product.name}`} width={600} height={600} loading={eager ? "eager" : "lazy"} decoding="async" className={`h-full w-full object-contain ${isSoldOut(product) ? "opacity-50 grayscale" : ""}`} />
     </div>
   );
 }
@@ -41,7 +43,7 @@ export function ProductCard({ product, eager = false }: { product: Product; eage
       <ProductImage product={product} eager={eager} />
       <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
         {product.sample && <span className="chip chip-sample">Sample</span>}
-        {product.quantity === 0 && <span className="chip chip-out">Sold out</span>}
+        {isSoldOut(product) && <span className="chip chip-out">Sold out</span>}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
         {product.brand && <p className="text-xs font-bold uppercase tracking-[.1em] text-muted">{product.brand}</p>}

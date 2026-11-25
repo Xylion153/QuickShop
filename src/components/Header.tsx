@@ -9,6 +9,7 @@ export const navLinks = [
   { href: "/shop", label: "Shop all" },
   { href: "/collections/fragrance", label: "Fragrance" },
   { href: "/collections/appliances", label: "Appliances" },
+  { href: "/collections/appliance-parts", label: "Parts" },
   { href: "/contact", label: "Contact" },
 ];
 

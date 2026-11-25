@@ -70,7 +70,7 @@ a, button, summary, label, input, select, textarea { touch-action: manipulation;
 .product-card { transition: transform .2s, box-shadow .2s; }
 @media (hover: hover) { .product-card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(21, 23, 28, .08); } }
 .tile-fragrance { background: var(--scent); }
-.tile-appliances { background: var(--steel); }
+.tile-appliances, .tile-appliance-parts { background: var(--steel); }
 
 /* Placeholder notice: shows the owner what still needs real info. Easy to spot, never mistaken for shop copy. */
 .todo { border: 1.5px dashed var(--signal); background: var(--signal-soft); color: #7c2d12; border-radius: .75rem; padding: .75rem 1rem; font-size: .92rem; }

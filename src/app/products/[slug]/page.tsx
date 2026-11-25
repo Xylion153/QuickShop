@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ConditionChip, Price, ProductGrid, ProductImage, StockChip, Todo } from "@/components/ProductBits";
 import { ChatIcon, ChevronLeft, ExternalIcon, TruckIcon } from "@/components/Icons";
-import { activeProducts, conditions, formatPrice, getCategory, getProduct } from "@/data/catalog";
+import { activeProducts, conditions, formatPrice, getCategory, getProduct, hasPhoto, isSoldOut } from "@/data/catalog";
 import { policies, site } from "@/data/site";
 
 export const dynamicParams = false;
@@ -14,17 +14,17 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const p = getProduct((await params).slug);
   if (!p) return {};
-  return { title: p.name, description: `${conditions[p.condition].label}. ${formatPrice(p.priceCents)}. ${p.description}`, openGraph: { images: [p.images[0]] } };
+  return { title: p.name, description: `${p.condition ? `${conditions[p.condition].label}. ` : ""}${formatPrice(p.priceCents)}. ${p.description}`, openGraph: { images: [p.images[0]] } };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const p = getProduct((await params).slug);
   if (!p) notFound();
   const category = getCategory(p.category)!;
-  const condition = conditions[p.condition];
-  const soldOut = p.quantity === 0;
+  const condition = p.condition ? conditions[p.condition] : null;
+  const soldOut = isSoldOut(p);
   const askHref = `/contact?item=${encodeURIComponent(p.slug)}`;
-  const related = activeProducts().filter((x) => x.category === p.category && x.slug !== p.slug && x.quantity > 0).slice(0, 4);
+  const related = activeProducts().filter((x) => x.category === p.category && x.slug !== p.slug && !isSoldOut(x)).slice(0, 4);
 
   // Without online checkout: eBay listing if there is one, otherwise ask the seller.
   const primary = soldOut
@@ -48,6 +48,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       <div className="mx-auto grid max-w-6xl gap-6 px-4 pt-4 md:grid-cols-2 md:gap-10">
         <div>
           <ProductImage product={p} eager className="rounded-2xl border border-line" />
+          {!hasPhoto(p) && !p.sample && <p className="mt-2 text-sm text-muted">Illustration only.{p.ebayUrl && <> <a href={p.ebayUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-signal-ink underline">See photos on eBay</a></>}</p>}
           {p.images.length > 1 && (
             <ul className="swipe mt-3" aria-label="More photos">
               {p.images.slice(1).map((src) => <li key={src} className="w-24"><ProductImage product={p} src={src} className="rounded-xl border border-line" /></li>)}
@@ -60,6 +61,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <h1 className="headline mt-1 text-3xl sm:text-4xl">{p.name}</h1>
           <div className="mt-4 flex flex-wrap gap-2"><ConditionChip product={p} /><StockChip product={p} /></div>
           <div className="mt-5"><Price product={p} large /></div>
+          {p.priceCheckedOn && <p className="mt-1 text-sm text-muted">eBay price as of {new Date(`${p.priceCheckedOn}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}. The listing shows today&apos;s price.</p>}
 
           <div className="mt-6 hidden gap-2 md:grid">
             {cta()}
@@ -68,8 +70,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           {!site.checkoutEnabled && !soldOut && !p.ebayUrl && <p className="mt-3 text-sm text-muted">Online checkout is coming soon. Send a message and we&apos;ll arrange payment and shipping with you.</p>}
 
           <section className="card mt-6 p-5" aria-labelledby="cond">
-            <h2 id="cond" className="font-bold">Condition: {condition.label}</h2>
-            <p className="mt-1 text-[15px] text-muted">{condition.description} <Link href="/conditions" className="font-semibold text-signal-ink underline">Condition guide</Link></p>
+            <h2 id="cond" className="font-bold">Condition: {condition ? condition.label : "see listing"}</h2>
+            <p className="mt-1 text-[15px] text-muted">
+              {condition
+                ? <>{condition.description} <Link href="/conditions" className="font-semibold text-signal-ink underline">Condition guide</Link></>
+                : p.ebayUrl ? <>The <a href={p.ebayUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-signal-ink underline">eBay listing</a> shows this item&apos;s condition and photos.</> : "Ask us about this item's condition."}
+            </p>
             {p.conditionNotes && <p className="mt-3 border-t border-line pt-3 text-[15px]"><strong>Seller notes:</strong> {p.conditionNotes}</p>}
           </section>
 

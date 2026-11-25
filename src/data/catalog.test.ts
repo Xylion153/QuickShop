@@ -11,14 +11,19 @@ describe("catalog", () => {
   it("uses known categories and conditions, sane prices and stock", () => {
     for (const p of products) {
       expect(categories.some((c) => c.slug === p.category)).toBe(true);
-      expect(conditions[p.condition]).toBeDefined();
+      if (p.condition !== null) expect(conditions[p.condition]).toBeDefined();
       expect(Number.isInteger(p.priceCents) && p.priceCents > 0).toBe(true);
-      expect(Number.isInteger(p.quantity) && p.quantity >= 0).toBe(true);
+      if (p.quantity !== null) expect(Number.isInteger(p.quantity) && p.quantity >= 0).toBe(true);
       if (p.retailCents !== null) expect(p.retailCents).toBeGreaterThan(p.priceCents);
       expect(p.images.length).toBeGreaterThan(0);
-      expect(p.addedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      if (p.ebayUrl) expect(p.ebayUrl).toMatch(/^https:\/\/(www\.)?ebay\.com\//);
+      if (p.addedOn !== null) expect(p.addedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      if (p.priceCheckedOn !== null) expect(p.priceCheckedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      if (p.ebayUrl) expect(p.ebayUrl).toMatch(/^https:\/\/(www\.)?ebay\.com\/itm\/\d+$/);
     }
+  });
+
+  it("never carries eBay's guarantee wording into product names", () => {
+    for (const p of products) expect(p.name).not.toMatch(/guarantee/i);
   });
 
   // Set LAUNCH=1 when checking a build that will go public: sample listings must be gone by then.

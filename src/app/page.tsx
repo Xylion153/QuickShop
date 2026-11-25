@@ -1,17 +1,17 @@
 import Link from "next/link";
 import { ProductGrid, Todo } from "@/components/ProductBits";
 import { ArrowRight, ChatIcon, TagIcon, TruckIcon } from "@/components/Icons";
-import { activeProducts, categories, inCategory } from "@/data/catalog";
+import { activeProducts, categories, inCategory, isSoldOut } from "@/data/catalog";
 import { site } from "@/data/site";
 
 export default function Home() {
   const all = activeProducts();
-  const featured = all.filter((p) => p.featured && p.quantity > 0).slice(0, 4);
+  const featured = all.filter((p) => p.featured && !isSoldOut(p)).slice(0, 4);
   const latest = all.filter((p) => !featured.includes(p)).slice(0, 8);
   const hasSamples = all.some((p) => p.sample);
 
   const howToBuy = [
-    { icon: TagIcon, title: "Every item, described", text: "Each listing shows its condition, what's included and how many are left." },
+    { icon: TagIcon, title: "Find it fast", text: "Search any shop page by name or part number." },
     site.ebayStoreUrl
       ? { icon: ArrowRight, title: "Buy on eBay", text: "Items that are also on eBay have a button straight to the listing." }
       : { icon: ArrowRight, title: "Buy your way", text: "Online checkout is on the way. For now, ask about any item and we'll sort it out." },
@@ -32,7 +32,7 @@ export default function Home() {
           <div>
             <p className="eyebrow">Shipped from {site.shipsFrom}</p>
             <h1 className="headline mt-3 text-[52px] sm:text-7xl">Cologne.<br />Appliances.<br /><span className="text-signal">Quick.</span></h1>
-            <p className="mt-5 max-w-md text-lg text-muted">Fragrance and home appliances, resold. Every listing shows the real condition, what&apos;s in the box and how many are left.</p>
+            <p className="mt-5 max-w-md text-lg text-muted">Fragrance, home appliances and replacement parts, resold. Search parts by part number and buy straight from our eBay listings.</p>
             <div className="mt-7 grid gap-3 sm:flex">
               <Link href="/shop" className="btn btn-primary">Shop all items <ArrowRight /></Link>
               {site.ebayStoreUrl
@@ -40,17 +40,17 @@ export default function Home() {
                 : <Link href="/conditions" className="btn btn-ghost">Condition guide</Link>}
             </div>
           </div>
-          <ul className="grid grid-cols-2 gap-3">
+          <ul className="grid grid-cols-3 gap-2.5 sm:gap-3">
             {categories.map((c) => (
               <li key={c.slug}>
                 <Link href={`/collections/${c.slug}`} className={`tile-${c.slug} product-card group flex h-full flex-col overflow-hidden rounded-2xl border border-line`}>
-                  <img src={c.art} alt="" width={300} height={300} loading="eager" className="aspect-square w-full object-contain p-2" />
-                  <span className="flex items-center justify-between gap-2 bg-card px-4 py-3">
+                  <img src={c.art} alt="" width={300} height={300} loading="eager" className="aspect-square w-full object-contain p-1" />
+                  <span className="flex flex-1 items-end justify-between gap-1 bg-card px-3 py-3 sm:px-4">
                     <span>
-                      <span className="block text-lg font-extrabold">{c.name}</span>
-                      <span className="block text-sm text-muted">{inCategory(c.slug).length} items</span>
+                      <span className="block text-[15px] font-extrabold leading-tight sm:text-lg">{c.name}</span>
+                      <span className="mt-0.5 block text-xs text-muted sm:text-sm">{inCategory(c.slug).length} items</span>
                     </span>
-                    <ArrowRight className="h-5 w-5 shrink-0 text-signal transition-transform group-hover:translate-x-0.5" />
+                    <ArrowRight className="hidden h-5 w-5 shrink-0 text-signal transition-transform group-hover:translate-x-0.5 sm:block" />
                   </span>
                 </Link>
               </li>

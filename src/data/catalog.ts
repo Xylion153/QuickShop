@@ -4,7 +4,9 @@
 // names on purpose (no real brands, prices or stock). Replace them with real items before the site goes public;
 // `LAUNCH=1 npm test` fails while any sample is still active (see catalog.test.ts).
 
-export type CategorySlug = "fragrance" | "appliances";
+import { EBAY_PRICES_CHECKED_ON, ebayParts } from "./ebay-parts";
+
+export type CategorySlug = "fragrance" | "appliances" | "appliance-parts";
 
 export type Category = {
   slug: CategorySlug;
@@ -16,6 +18,7 @@ export type Category = {
 export const categories: Category[] = [
   { slug: "fragrance", name: "Fragrance", blurb: "Cologne, eau de parfum and gift sets.", art: "/art/bottle-tall.svg" },
   { slug: "appliances", name: "Appliances", blurb: "Kitchen and home appliances.", art: "/art/mixer.svg" },
+  { slug: "appliance-parts", name: "Appliance parts", blurb: "Replacement parts for refrigerators, washers, dryers and ranges. Search by part number.", art: "/art/part-fridge.svg" },
 ];
 
 // Condition labels describe the item, not a promise. The descriptions say what each label means on this shop;
@@ -34,11 +37,11 @@ export type Product = {
   name: string;
   brand: string | null;
   category: CategorySlug;
-  condition: Condition;
+  condition: Condition | null; // null = not recorded here; the eBay listing shows it
   priceCents: number;
   // Original retail price, only when the owner can back it up. Shown struck through next to the price.
   retailCents: number | null;
-  quantity: number; // 0 = sold out (still shown, marked sold out)
+  quantity: number | null; // 0 = sold out (still shown, marked sold out); null = not tracked here
   // Short facts shown as a table: size, concentration, model number, wattage, what's in the box...
   specs: { label: string; value: string }[];
   description: string;
@@ -46,10 +49,12 @@ export type Product = {
   conditionNotes: string | null;
   images: string[]; // first one is the main photo; put photos in /public/products/
   ebayUrl: string | null; // this exact item's eBay listing, if it's listed there too
+  // Set when the price was copied from eBay: the date it was checked. The product page says eBay has the current price.
+  priceCheckedOn: string | null;
   featured: boolean;
   active: boolean;
   sample: boolean;
-  addedOn: string; // YYYY-MM-DD, newest first on the shop page
+  addedOn: string | null; // YYYY-MM-DD, newest first on the shop page; null = unknown (listed after dated items)
 };
 
 export const products: Product[] = [
@@ -59,7 +64,7 @@ export const products: Product[] = [
     priceCents: 6500, retailCents: null, quantity: 3,
     specs: [{ label: "Size", value: "3.4 oz / 100 ml" }, { label: "Concentration", value: "Eau de parfum" }, { label: "Box", value: "Sealed" }],
     description: "Placeholder listing. Describe the scent family, notes and who it suits in the owner's words.",
-    conditionNotes: null, images: ["/art/bottle-tall.svg"], ebayUrl: null,
+    conditionNotes: null, images: ["/art/bottle-tall.svg"], ebayUrl: null, priceCheckedOn: null,
   },
   {
     slug: "sample-fresh-cologne-50ml", sample: true, active: true, featured: true, addedOn: "2026-11-22",
@@ -67,7 +72,7 @@ export const products: Product[] = [
     priceCents: 4200, retailCents: null, quantity: 1,
     specs: [{ label: "Size", value: "1.7 oz / 50 ml" }, { label: "Concentration", value: "Eau de toilette" }, { label: "Fill level", value: "Full" }],
     description: "Placeholder listing. Open-box items work well with a clear photo of the bottle and fill level.",
-    conditionNotes: "Box opened for photos. Bottle unused.", images: ["/art/bottle-round.svg"], ebayUrl: null,
+    conditionNotes: "Box opened for photos. Bottle unused.", images: ["/art/bottle-round.svg"], ebayUrl: null, priceCheckedOn: null,
   },
   {
     slug: "sample-gift-set", sample: true, active: true, featured: false, addedOn: "2026-11-18",
@@ -75,7 +80,7 @@ export const products: Product[] = [
     priceCents: 7800, retailCents: null, quantity: 0,
     specs: [{ label: "Includes", value: "Spray, travel spray, aftershave balm" }],
     description: "Placeholder listing that shows how a sold-out item looks.",
-    conditionNotes: null, images: ["/art/bottle-square.svg"], ebayUrl: null,
+    conditionNotes: null, images: ["/art/bottle-square.svg"], ebayUrl: null, priceCheckedOn: null,
   },
   {
     slug: "sample-stand-mixer", sample: true, active: true, featured: true, addedOn: "2026-11-23",
@@ -83,7 +88,7 @@ export const products: Product[] = [
     priceCents: 18900, retailCents: null, quantity: 1,
     specs: [{ label: "Model", value: "SM-500" }, { label: "Bowl", value: "5 qt stainless" }, { label: "In the box", value: "Bowl, whisk, dough hook, beater" }],
     description: "Placeholder listing. For appliances, list the model number and everything that's in the box.",
-    conditionNotes: "Opened and tested once. All attachments included.", images: ["/art/mixer.svg"], ebayUrl: null,
+    conditionNotes: "Opened and tested once. All attachments included.", images: ["/art/mixer.svg"], ebayUrl: null, priceCheckedOn: null,
   },
   {
     slug: "sample-air-fryer", sample: true, active: true, featured: true, addedOn: "2026-11-20",
@@ -91,7 +96,7 @@ export const products: Product[] = [
     priceCents: 5900, retailCents: null, quantity: 2,
     specs: [{ label: "Model", value: "AF-6" }, { label: "Capacity", value: "6 qt" }, { label: "Power", value: "1700 W" }],
     description: "Placeholder listing. Say how it was tested and cleaned.",
-    conditionNotes: "Light marks on the basket.", images: ["/art/air-fryer.svg"], ebayUrl: null,
+    conditionNotes: "Light marks on the basket.", images: ["/art/air-fryer.svg"], ebayUrl: null, priceCheckedOn: null,
   },
   {
     slug: "sample-coffee-maker", sample: true, active: true, featured: false, addedOn: "2026-11-15",
@@ -99,12 +104,25 @@ export const products: Product[] = [
     priceCents: 2500, retailCents: null, quantity: 1,
     specs: [{ label: "Model", value: "CM-12" }, { label: "Capacity", value: "12 cups" }],
     description: "Placeholder listing.",
-    conditionNotes: "Works. Scuffs on the side panel.", images: ["/art/coffee-maker.svg"], ebayUrl: null,
+    conditionNotes: "Works. Scuffs on the side panel.", images: ["/art/coffee-maker.svg"], ebayUrl: null, priceCheckedOn: null,
   },
+  // Real listings from the eBay store (see ebay-parts.ts).
+  ...ebayParts.map((e): Product => ({
+    slug: e.slug, name: e.name, brand: e.brand, category: "appliance-parts", condition: null,
+    priceCents: e.priceCents, retailCents: null, quantity: null, specs: e.specs,
+    description: "Search by the part number in the details to check it fits your appliance. The eBay listing has photos, condition and compatibility.",
+    conditionNotes: null, images: [e.image], ebayUrl: `https://www.ebay.com/itm/${e.ebayItemId}`, priceCheckedOn: EBAY_PRICES_CHECKED_ON,
+    featured: false, active: true, sample: false, addedOn: null,
+  })),
 ];
 
+// Dated items newest first, then undated items in catalog order.
 export const activeProducts = () =>
-  products.filter((p) => p.active).sort((a, b) => b.addedOn.localeCompare(a.addedOn));
+  products.filter((p) => p.active).sort((a, b) => (b.addedOn ?? "").localeCompare(a.addedOn ?? ""));
+
+export const isSoldOut = (p: Product) => p.quantity === 0;
+// Illustrations (from /art/) stand in for photos until the owner adds real ones.
+export const hasPhoto = (p: Product) => !p.images[0].startsWith("/art/");
 
 export const getProduct = (slug: string) => products.find((p) => p.slug === slug && p.active);
 export const getCategory = (slug: string) => categories.find((c) => c.slug === slug);

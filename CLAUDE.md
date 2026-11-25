@@ -14,7 +14,9 @@ storefront only (no cart, checkout, payments, admin or database). See `README.md
 - Mobile first: check every UI change at 390px wide; tap targets ≥ 44px, inputs 16px.
 
 ## Layout
-- Data: `src/data/site.ts` (shop settings + policy text), `src/data/catalog.ts` (categories, condition labels, products).
+- Data: `src/data/site.ts` (shop settings + policy text), `src/data/catalog.ts` (categories, condition labels, products),
+  `src/data/ebay-parts.ts` (real parts copied from the eBay store; condition/stock unknown = null, never guessed).
+- Don't carry eBay's "Money Back Guarantee" tag into names: it's an eBay program, not a shop promise.
 - Shared UI: `src/components/ProductBits.tsx` (cards, chips, price, `Todo`), `Listing.tsx`, `PolicyPage.tsx`.
 - Theme: CSS variables at the top of `src/app/globals.css`; font Archivo (self-hosted, `src/fonts/`).
 
