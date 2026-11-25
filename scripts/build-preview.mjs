@@ -59,9 +59,11 @@ for (const [, href] of home.matchAll(/<link[^>]+rel="stylesheet"[^>]+href="([^"]
 if (!css) throw new Error("no stylesheet found");
 
 const art = {};
-for (const f of fs.readdirSync(path.join(ROOT, "public", "art"))) {
-  if (f.endsWith(".svg")) art[`/art/${f}`] = dataUri(path.join(ROOT, "public", "art", f), "image/svg+xml");
+for (const f of fs.readdirSync(path.join(ROOT, "public", "art"), { recursive: true })) {
+  if (f.endsWith(".svg")) art[`/art/${f.split(path.sep).join("/")}`] = dataUri(path.join(ROOT, "public", "art", f), "image/svg+xml");
 }
+// Fail loudly if a page uses art that wasn't bundled (it would show as a blank tile).
+for (const [, a] of Object.values(pages).join("").matchAll(/data-art="([^"]+)"/g)) if (!art[a]) throw new Error(`missing art ${a}`);
 
 const json = JSON.stringify({ pages, art }).replace(/</g, "\\u003c");
 const runtime = fs.readFileSync(path.join(ROOT, "preview", "runtime.js"), "utf8");

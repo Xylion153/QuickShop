@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600"><defs>
+<linearGradient id="bg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#f8f1fb"/><stop offset=".62" stop-color="#f8f1fb"/><stop offset="1" stop-color="#e2d5ee"/></linearGradient>
+<radialGradient id="spot" cx=".5" cy=".38" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+
+<linearGradient id="mH" x1="0" x2="1"><stop offset="0" stop-color="#78818a"/><stop offset=".38" stop-color="#f1f4f6"/><stop offset=".6" stop-color="#c2c9cf"/><stop offset="1" stop-color="#69717a"/></linearGradient>
+<linearGradient id="mV" y1="0" y2="1" x1="0" x2="0"><stop offset="0" stop-color="#f6f8f9"/><stop offset=".5" stop-color="#b8bfc6"/><stop offset="1" stop-color="#78818a"/></linearGradient>
+<linearGradient id="wP" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dde3e8"/></linearGradient>
+<linearGradient id="wPH" x1="0" x2="1"><stop offset="0" stop-color="#e4e9ed"/><stop offset=".35" stop-color="#ffffff"/><stop offset="1" stop-color="#c9d1d8"/></linearGradient>
+<linearGradient id="bP" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4b525b"/><stop offset="1" stop-color="#14171b"/></linearGradient>
+<linearGradient id="bPH" x1="0" x2="1"><stop offset="0" stop-color="#262a30"/><stop offset=".4" stop-color="#5a616b"/><stop offset="1" stop-color="#181b1f"/></linearGradient>
+<linearGradient id="br" x1="0" x2="1"><stop offset="0" stop-color="#a77b22"/><stop offset=".45" stop-color="#fbe5a6"/><stop offset="1" stop-color="#b58b2e"/></linearGradient>
+<linearGradient id="rub" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#454b54"/><stop offset="1" stop-color="#0e1013"/></linearGradient>
+<linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#cfdde6" stop-opacity=".75"/><stop offset=".3" stop-color="#ffffff" stop-opacity=".55"/><stop offset="1" stop-color="#b7c7d2" stop-opacity=".7"/></linearGradient>
+<linearGradient id="shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="13"/></filter>
+<filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="6"/></filter>
+<linearGradient id="liqL" x1="0" x2="1"><stop offset="0" stop-color="#8d74b8"/><stop offset=".45" stop-color="#cbb7ea"/><stop offset="1" stop-color="#6e5799"/></linearGradient>
+<linearGradient id="liqA" x1="0" x2="1"><stop offset="0" stop-color="#c7832c"/><stop offset=".45" stop-color="#f6c77f"/><stop offset="1" stop-color="#a6641a"/></linearGradient>
+<linearGradient id="liqB" x1="0" x2="1"><stop offset="0" stop-color="#4f8aa6"/><stop offset=".45" stop-color="#a9d8ea"/><stop offset="1" stop-color="#3c6f87"/></linearGradient>
+<linearGradient id="cap" x1="0" x2="1"><stop offset="0" stop-color="#121417"/><stop offset=".4" stop-color="#4b525b"/><stop offset="1" stop-color="#0d0f12"/></linearGradient>
+<linearGradient id="gold" x1="0" x2="1"><stop offset="0" stop-color="#9b7426"/><stop offset=".45" stop-color="#f8e3a4"/><stop offset="1" stop-color="#a77d2c"/></linearGradient></defs>
+<rect width="600" height="600" fill="url(#bg)"/><rect width="600" height="600" fill="url(#spot)"/>
+<ellipse cx="300" cy="484" rx="140" ry="18" fill="#1b2026" opacity="0.24" filter="url(#blur)"/><rect x="258" y="120" width="84" height="58" rx="29" fill="url(#gold)"/><rect x="282" y="176" width="36" height="34" fill="url(#gold)" opacity=".85"/><circle cx="300" cy="340" r="142" fill="url(#gl)"/><circle cx="300" cy="352" r="118" fill="url(#liqA)"/><path d="M196 300 A118 118 0 0 1 262 220" fill="none" stroke="#fff" stroke-width="14" stroke-linecap="round" opacity=".6"/><circle cx="300" cy="352" r="44" fill="#fbfaf6" opacity=".92"/><rect x="274" y="347" width="52" height="8" rx="4" fill="#2b2f35" opacity=".7"/>
+</svg>
